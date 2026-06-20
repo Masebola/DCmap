@@ -68,7 +68,7 @@ function renderEntryRow(entry) {
 function renderEventGate(event) {
   const stats = issueStats(event.chapters || []);
   const expanded = expandedEvents.has(event.id);
-  return `<article class="route-event-gate event-${escapeHtml(event.type)}${stats.complete ? ' is-complete' : ''}">
+  return `<article class="route-event-gate event-${escapeHtml(event.type)}${stats.complete ? ' is-complete' : ''}" data-event-id="${escapeHtml(event.id)}">
     <div class="event-gate-banner"><span>${badge(event.type.replaceAll('-', ' '), event.type)}</span><span>${escapeHtml(event.year)}</span></div>
     <div class="event-gate-main">
       <div class="event-gate-copy"><span class="eyebrow">EVENT GATE</span><h3>${escapeHtml(event.title)}</h3><p>${escapeHtml(event.summary)}</p></div>

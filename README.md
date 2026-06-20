@@ -53,15 +53,13 @@ The application uses hash routes, so no special server redirects are required.
 
 The previous working tracker is preserved inside `/legacy`.
 
-## Route checklist redesign (v6.1)
+## Version 6.2: scroll-preserving progress updates
 
-New 52 route pages now use a guided checklist layout instead of combining several titles into one large issue drawer.
+Progress changes no longer send a route back to the top. The application now:
 
-- **Parallel blocks** keep independent series separate until a crossover begins.
-- **Sequential blocks** are read from top to bottom while each issue range stays together.
-- **Strict blocks** display major events as full-width gates with exact chapter order.
-- Every ordinary row includes a visible checkbox, progress meter, **Issues**, and **Mark read** controls.
-- Issue lists expand directly inside the route on desktop and mobile.
-- Shared issues still use canonical IDs, so reading an issue in an event updates its family route automatically.
-
-The Green Lantern family demonstrates the intended pattern clearly: four independent opening books, followed by the ordered *Rise of the Third Army* and *Wrath of the First Lantern* gates. The same grouping model is now applied throughout the New 52 routes.
+- scrolls to the top only when navigating to a genuinely different page;
+- captures the active entry or event before a progress update;
+- restores that item to the same viewport position after the interface refreshes;
+- restores keyboard focus without causing another scroll;
+- preserves position for single issues, full ranges, events and legacy-era progress;
+- keeps inline issue and event expansion anchored while opening or closing.
