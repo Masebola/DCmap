@@ -62,8 +62,13 @@ export function entry({
   return { id, routeId, phaseId, title, year, summary, issues: issueList, priority, tags, legacyIds, note, stop };
 }
 
-export function route({ id, title, shortTitle, description, accent, icon, steps = [] }) {
-  return { id, title, shortTitle: shortTitle || title, description, accent, icon, steps };
+export function route({ id, title, shortTitle, description, accent, icon, steps = [], blocks = [] }) {
+  const flattened = blocks.length ? blocks.flatMap(block => block.steps || []) : steps;
+  return { id, title, shortTitle: shortTitle || title, description, accent, icon, steps: flattened, blocks };
+}
+
+export function routeBlock({ id, title, mode = 'sequential', description = '', help = '', year = '', steps = [] }) {
+  return { id, title, mode, description, help, year, steps };
 }
 
 export function event({

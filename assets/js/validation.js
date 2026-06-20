@@ -8,6 +8,13 @@ export function validateStructuredEra(model) {
     if (!(entry.issues instanceof Array)) errors.push(`Entry ${entry.id} has no issue array`);
   }
   for (const route of model.routes.values()) {
+    const blockIds = new Set();
+    for (const block of route.blocks || []) {
+      if (blockIds.has(block.id)) errors.push(`Duplicate route block id ${block.id} in ${route.id}`);
+      blockIds.add(block.id);
+      if (!['parallel', 'sequential', 'strict'].includes(block.mode)) errors.push(`Invalid route mode ${block.mode} in ${route.id}/${block.id}`);
+      if (!block.steps?.length) errors.push(`Empty route block ${block.id} in ${route.id}`);
+    }
     for (const step of route.steps) {
       if (!model.entries.has(step) && !model.events.has(step)) errors.push(`Unknown route step ${step} in ${route.id}`);
     }

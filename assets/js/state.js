@@ -48,17 +48,29 @@ export const store = {
 };
 
 export function migrateNew52Aliases(model) {
-  if (data.migrations?.new52CanonicalV1) return;
-  const apply = (legacyIds, issueList) => {
-    if (!legacyIds?.length || !issueList?.length) return;
-    for (const legacyId of legacyIds) {
-      const count = Number(data.legacyProgress?.[legacyId] || 0);
-      if (!count) continue;
-      issueList.slice(0, Math.min(count, issueList.length)).forEach(issue => { data.issueProgress[issue.id] = true; });
-    }
-  };
-  model.entries.forEach(entry => apply(entry.legacyIds, entry.issues));
-  model.events.forEach(event => apply(event.legacyIds, event.chapters));
-  data.migrations.new52CanonicalV1 = true;
-  notify();
+  let changed = false;
+  if (!data.migrations?.new52CanonicalV1) {
+    const apply = (legacyIds, issueList) => {
+      if (!legacyIds?.length || !issueList?.length) return;
+      for (const legacyId of legacyIds) {
+        const count = Number(data.legacyProgress?.[legacyId] || 0);
+        if (!count) continue;
+        issueList.slice(0, Math.min(count, issueList.length)).forEach(issue => { data.issueProgress[issue.id] = true; });
+      }
+    };
+    model.entries.forEach(entry => apply(entry.legacyIds, entry.issues));
+    model.events.forEach(event => apply(event.legacyIds, event.chapters));
+    data.migrations.new52CanonicalV1 = true;
+    changed = true;
+  }
+  if (!data.migrations?.new52RouteRowsV2) {
+    [7,8,9,10,11,14,15,16,18,19,20].forEach(number => {
+      const source = `justice-league-2011-${number}`;
+      const backup = `justice-league-shazam-backup-2011-${number}`;
+      if (data.issueProgress[source] && model.issues.has(backup)) data.issueProgress[backup] = true;
+    });
+    data.migrations.new52RouteRowsV2 = true;
+    changed = true;
+  }
+  if (changed) notify();
 }

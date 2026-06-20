@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A curated DC Comics continuity roadmap and beginner essentials tracker from Crisis on Infinite Earths through the current DC All In era.">
+  <title>DC Comics Master Reading Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-shell">
+      <div class="brand">
+        <span class="brand-kicker">THE LONG BOX PROJECT</span>
+        <h1>DC READING TRACKER</h1>
+        <p>Crisis on Infinite Earths → DC All In</p>
+      </div>
+      <div class="global-stats" aria-label="Global progress">
+        <div class="stat-card"><span id="g-read">0</span><small>issues read</small></div>
+        <div class="stat-card"><span id="g-total">0</span><small>estimated issues represented</small></div>
+        <div class="stat-card compact"><span id="g-groups">0 / 0</span><small>groups complete</small></div>
+        <div class="global-progress"><div id="g-bar"></div></div>
+        <strong id="g-pct">0%</strong>
+      </div>
+    </div>
+    <nav class="view-tabs" aria-label="Tracker views">
+      <button class="view-tab active" data-view="roadmap">Roadmap</button>
+      <button class="view-tab" data-view="essentials">Beginner Essentials</button>
+      <button class="header-action" id="export-progress">Export Progress</button>
+      <label class="header-action file-action">Import Progress<input id="import-progress" type="file" accept="application/json"></label>
+    </nav>
+  </header>
+
+  <nav class="era-nav" id="era-nav" aria-label="Roadmap eras"><div id="era-nav-inner"></div></nav>
+  <main id="main" class="main"></main>
+
+  <dialog id="progress-dialog" class="progress-dialog">
+    <form method="dialog" id="progress-form">
+      <button class="dialog-close" value="cancel" aria-label="Close">×</button>
+      <span class="dialog-kicker">PARTIAL PROGRESS</span>
+      <h2 id="dialog-title">Reading entry</h2>
+      <p id="dialog-help"></p>
+      <label>Issues read
+        <input id="dialog-value" type="number" min="0" value="0">
+      </label>
+      <div class="dialog-range"><input id="dialog-slider" type="range" min="0" value="0"></div>
+      <div class="dialog-actions">
+        <button value="cancel" class="ghost-button">Cancel</button>
+        <button value="default" id="dialog-save" class="primary-button">Save progress</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

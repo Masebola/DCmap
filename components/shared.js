@@ -10,14 +10,16 @@ export function badge(label, kind = 'neutral') {
   return `<span class="badge badge-${escapeHtml(kind)}">${escapeHtml(label)}</span>`;
 }
 
-export function issueChecklist(issueList, contextId) {
-  return `<ol class="chapter-list">${issueList.map((item, index) => {
+export function issueChecklist(issueList, contextId, { ordered = true, compact = false } = {}) {
+  const listTag = ordered ? 'ol' : 'ul';
+  return `<${listTag} class="chapter-list${compact ? ' compact' : ''}${ordered ? ' ordered' : ' unordered'}">${issueList.map((item, index) => {
     const read = Boolean(store.value.issueProgress[item.id]);
+    const label = ordered ? `${index + 1}. ${formatIssue(item)}` : formatIssue(item);
     return `<li class="chapter-item${read ? ' is-read' : ''}">
-      <button class="issue-toggle" data-action="toggle-issue" data-issue-id="${escapeHtml(item.id)}" data-context-id="${escapeHtml(contextId)}" aria-pressed="${read}">${read ? '✓' : ''}</button>
-      <div><strong>${index + 1}. ${escapeHtml(formatIssue(item))}</strong>${item.releaseYear ? `<small>${escapeHtml(item.releaseYear)}</small>` : ''}</div>
+      <button class="issue-toggle" data-action="toggle-issue" data-issue-id="${escapeHtml(item.id)}" data-context-id="${escapeHtml(contextId)}" aria-pressed="${read}" aria-label="${read ? 'Mark unread' : 'Mark read'}: ${escapeHtml(formatIssue(item))}">${read ? '✓' : ''}</button>
+      <div><strong>${escapeHtml(label)}</strong>${item.releaseYear ? `<small>${escapeHtml(item.releaseYear)}</small>` : ''}</div>
     </li>`;
-  }).join('')}</ol>`;
+  }).join('')}</${listTag}>`;
 }
 
 export function entryCard(entry) {

@@ -8,7 +8,7 @@ import { exportProgress, importProgress } from './import-export.js';
 import { globalStats } from './progress.js';
 import { $, escapeHtml, toast } from './utils.js';
 import { renderDashboard } from '../../components/dashboard-view.js';
-import { renderMasterFlow, renderRoutes, renderEvents } from '../../components/structured-views.js';
+import { renderMasterFlow, renderRoutes, renderEvents, toggleInlineEntry, toggleInlineEvent } from '../../components/structured-views.js';
 import { renderLegacyEra } from '../../components/legacy-view.js';
 import { renderEssentials, setSelectedEssential } from '../../components/essentials-view.js';
 import { renderSettings } from '../../components/settings-view.js';
@@ -124,6 +124,14 @@ document.addEventListener('click', event => {
     const item = currentModel.events.get(target.dataset.eventId);
     if (item) openDetails(eventDetails(item), { type: 'event', id: item.id });
   }
+  if (action === 'toggle-inline-entry' && currentModel) {
+    toggleInlineEntry(target.dataset.entryId);
+    $('#main').innerHTML = renderRoutes(currentModel, currentRoute.routeId);
+  }
+  if (action === 'toggle-inline-event' && currentModel) {
+    toggleInlineEvent(target.dataset.eventId);
+    $('#main').innerHTML = renderRoutes(currentModel, currentRoute.routeId);
+  }
   if (action === 'open-legacy' && currentEra) {
     const item = allLegacyItems(currentEra).find(row => row.id === target.dataset.itemId);
     if (item) openDetails(legacyDetails(item), { type: 'legacy', id: item.id });
@@ -133,6 +141,14 @@ document.addEventListener('click', event => {
     const id = target.dataset.issueId;
     const issue = currentModel.issues.get(id);
     store.setIssue(id, !store.value.issueProgress[id], issue ? `${issue.series} #${issue.issue}` : id);
+  }
+  if (action === 'toggle-entry-complete' && currentModel) {
+    const entry = currentModel.entries.get(target.dataset.entryId);
+    if (entry) {
+      const ids = (entry.issues || []).map(issue => issue.id);
+      const complete = ids.length > 0 && ids.every(id => store.value.issueProgress[id]);
+      store.setIssues(ids, !complete, entry.title);
+    }
   }
   if (action === 'mark-entry' && currentModel) {
     const entry = currentModel.entries.get(target.dataset.entryId);

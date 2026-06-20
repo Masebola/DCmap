@@ -1,10 +1,11 @@
 {
   "name": "dc-reading-tracker",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "serve": "python -m http.server 8000",
-    "validate": "node tests/validate-data.mjs"
+    "validate": "node tests/validate-data.mjs",
+    "test": "node tests/validate-data.mjs && node tests/render-views.mjs && node tests/smoke-app.mjs && node tests/route-layout.mjs"
   }
 }

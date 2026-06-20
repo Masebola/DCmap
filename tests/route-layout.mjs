@@ -1,0 +1,16 @@
+globalThis.localStorage={getItem(){return null;},setItem(){},removeItem(){}};
+globalThis.matchMedia=()=>({matches:false,addEventListener(){}});
+const new52=(await import('../data/eras/new52/index.js')).default;
+const {prepareStructuredEra}=await import('../assets/js/data-model.js');
+const views=await import('../components/structured-views.js');
+const model=prepareStructuredEra(new52);
+let html=views.renderRoutes(model,'green-lantern-family');
+if(!html.includes('Opening Lantern Stories')) throw new Error('Green Lantern block heading missing');
+if(!html.includes('Green Lantern #1–12')) throw new Error('Green Lantern opening row missing');
+if(!html.includes('Open reading order')) throw new Error('Event gate control missing');
+views.toggleInlineEntry('gl-opening');
+views.toggleInlineEvent('rise-of-the-third-army');
+html=views.renderRoutes(model,'green-lantern-family');
+if(!html.includes('inline-issue-panel')) throw new Error('Inline issue panel did not render');
+if(!html.includes('inline-event-order')) throw new Error('Inline event order did not render');
+console.log('Route layout controls passed.');
