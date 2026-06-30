@@ -1,10 +1,10 @@
 import { escapeHtml } from '../assets/js/utils.js';
 import { issueStats, legacyItemStats } from '../assets/js/progress.js';
-import { issueChecklist, badge, progressBar } from './shared.js';
+import { issueChecklist, badge, creatorLine, progressBar } from './shared.js';
 
 export function entryDetails(entry) {
   const stats = issueStats(entry.issues || []);
-  return `<div class="drawer-head"><div><span class="drawer-kicker">${escapeHtml(entry.year || '')}</span><h2>${escapeHtml(entry.title)}</h2></div><button class="icon-button" data-action="close-details" aria-label="Close details">×</button></div>
+  return `<div class="drawer-head"><div><span class="drawer-kicker">${escapeHtml(entry.year || '')}</span><h2>${escapeHtml(entry.title)}</h2>${creatorLine(entry,{includeArtists:true})}</div><button class="icon-button" data-action="close-details" aria-label="Close details">×</button></div>
   <div class="drawer-badges">${badge(entry.priority || 'recommended', entry.priority || 'recommended')}${(entry.tags || []).map(tag => badge(tag, 'neutral')).join('')}</div>
   <p class="drawer-summary">${escapeHtml(entry.summary || '')}</p>
   ${entry.note ? `<div class="notice">${escapeHtml(entry.note)}</div>` : ''}
@@ -14,11 +14,23 @@ export function entryDetails(entry) {
   ${entry.issues?.length ? issueChecklist(entry.issues, entry.id) : '<div class="empty-state">This is a summary or navigation step and has no separate issues to mark.</div>'}`;
 }
 
-export function eventDetails(event) {
+function requirementRows(event, model) {
+  if (event.requiredEntries?.length && model) {
+    return event.requiredEntries.map(id => {
+      const entry = model.entries.get(id);
+      if (!entry) return '';
+      const stats = issueStats(entry.issues || []);
+      return `<li class="${stats.complete ? 'requirement-complete' : ''}"><span>${stats.complete ? '✓' : '○'}</span>${escapeHtml(entry.title)}</li>`;
+    }).join('');
+  }
+  return (event.requiredBefore || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
+}
+
+export function eventDetails(event, model = null) {
   const stats = issueStats(event.chapters || []);
-  return `<div class="drawer-head"><div><span class="drawer-kicker">${escapeHtml(event.year)} · ${escapeHtml(event.type.replaceAll('-', ' '))}</span><h2>${escapeHtml(event.title)}</h2></div><button class="icon-button" data-action="close-details" aria-label="Close details">×</button></div>
+  return `<div class="drawer-head"><div><span class="drawer-kicker">${escapeHtml(event.year)} · ${escapeHtml(event.type.replaceAll('-', ' '))}</span><h2>${escapeHtml(event.title)}</h2>${event.architect ? `<span class="creator-line"><b>${escapeHtml(event.architect)}</b></span>` : ''}</div><button class="icon-button" data-action="close-details" aria-label="Close details">×</button></div>
   <p class="drawer-summary">${escapeHtml(event.summary)}</p>
-  ${event.requiredBefore?.length ? `<section class="requirement-box"><h3>Read before starting</h3><ul>${event.requiredBefore.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>` : ''}
+  ${(event.requiredEntries?.length || event.requiredBefore?.length) ? `<section class="requirement-box"><h3>Read before starting</h3><ul>${requirementRows(event, model)}</ul></section>` : ''}
   <div class="drawer-progress">${progressBar(stats)}<strong>${stats.read} / ${stats.total} chapters · ${stats.pct}%</strong></div>
   <div class="drawer-actions"><button class="primary-button" data-action="mark-event" data-event-id="${escapeHtml(event.id)}" data-mode="read">Mark event read</button><button class="secondary-button" data-action="mark-event" data-event-id="${escapeHtml(event.id)}" data-mode="clear">Clear</button></div>
   <h3 class="section-title">Reading order</h3>${issueChecklist(event.chapters, event.id)}

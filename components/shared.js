@@ -10,6 +10,13 @@ export function badge(label, kind = 'neutral') {
   return `<span class="badge badge-${escapeHtml(kind)}">${escapeHtml(label)}</span>`;
 }
 
+export function creatorLine(item, { includeArtists = false } = {}) {
+  const writers = item.writers?.length ? item.writers.join(', ') : '';
+  const artists = includeArtists && item.artists?.length ? item.artists.join(', ') : '';
+  if (!writers && !artists) return '';
+  return `<span class="creator-line">${writers ? `<b>${escapeHtml(writers)}</b>` : ''}${writers && artists ? ' · ' : ''}${artists ? escapeHtml(artists) : ''}</span>`;
+}
+
 export function issueChecklist(issueList, contextId, { ordered = true, compact = false } = {}) {
   const listTag = ordered ? 'ol' : 'ul';
   return `<${listTag} class="chapter-list${compact ? ' compact' : ''}${ordered ? ' ordered' : ' unordered'}">${issueList.map((item, index) => {
@@ -25,10 +32,11 @@ export function issueChecklist(issueList, contextId, { ordered = true, compact =
 export function entryCard(entry) {
   const stats = issueStats(entry.issues || []);
   const priority = entry.priority || 'recommended';
-  return `<article class="reading-card${stats.complete ? ' is-complete' : ''}" data-entry-id="${escapeHtml(entry.id)}">
+  return `<article class="reading-card priority-${escapeHtml(priority)}${stats.complete ? ' is-complete' : ''}" data-entry-id="${escapeHtml(entry.id)}">
     <button class="card-open" data-action="open-entry" data-entry-id="${escapeHtml(entry.id)}">
       <div class="card-topline"><span>${escapeHtml(entry.year || '')}</span>${badge(priority.replaceAll('-', ' '), priority)}</div>
       <h4>${escapeHtml(entry.title)}</h4>
+      ${creatorLine(entry)}
       <p>${escapeHtml(entry.summary || '')}</p>
       ${progressBar(stats, true)}
       <div class="card-meta"><span>${stats.read} / ${stats.total || 0} issues</span>${entry.stop ? `<span class="stop-label">Stop noted</span>` : ''}</div>
@@ -42,6 +50,7 @@ export function eventCard(event) {
     <button class="card-open" data-action="open-event" data-event-id="${escapeHtml(event.id)}">
       <div class="card-topline"><span>${escapeHtml(event.year)}</span>${badge(event.type.replaceAll('-', ' '), event.type)}</div>
       <h4>${escapeHtml(event.title)}</h4>
+      ${event.architect ? `<span class="creator-line"><b>${escapeHtml(event.architect)}</b></span>` : ''}
       <p>${escapeHtml(event.summary)}</p>
       ${progressBar(stats, true)}
       <div class="card-meta"><span>${stats.read} / ${stats.total} chapters</span><span>Open order</span></div>
