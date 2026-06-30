@@ -1,0 +1,14 @@
+import { combine, entry, range, route, routeBlock, special } from '../../../shared/helpers.js';
+
+export const entries = [
+  entry({id:'rb-green-arrow-death-life',routeId:'green-arrow-family',phaseId:'rb-phase-1',title:'Green Arrow: Rebirth #1 and Green Arrow #1–5: The Death and Life of Oliver Queen',year:'2016',writers:['Benjamin Percy'],artists:['Otto Schmidt'],summary:'Oliver and Dinah reunite while the Ninth Circle tears apart his wealth, name and city.',issues:combine([special('Green Arrow: Rebirth',2016)],range('Green Arrow',2016,1,5,2016)),priority:'core',legacyIds:['rb-1-oth']}),
+  entry({id:'rb-green-arrow-island-scars',routeId:'green-arrow-family',phaseId:'rb-phase-2',title:'Green Arrow #6–11: Island of Scars',year:'2016',writers:['Benjamin Percy'],artists:['Stephen Byrne','Juan Ferreyra'],summary:'Stranded and presumed dead, Oliver rebuilds his alliance with Dinah and Emiko.',issues:range('Green Arrow',2016,6,11,2016),priority:'core',legacyIds:['rb-2-ww','rb-3-jl']}),
+  entry({id:'rb-green-arrow-emerald-outlaw',routeId:'green-arrow-family',phaseId:'rb-phase-3',title:'Green Arrow #12–17: Emerald Outlaw',year:'2017',writers:['Benjamin Percy'],artists:['Otto Schmidt','Juan Ferreyra'],summary:'Oliver becomes Seattle’s most wanted man as the city turns against its vigilante.',issues:range('Green Arrow',2016,12,17,2017),priority:'core',legacyIds:['rb-3-jl']}),
+  entry({id:'rb-green-arrow-rise-star-city',routeId:'green-arrow-family',phaseId:'rb-phase-4',title:'Green Arrow #18–25: The Rise of Star City',year:'2017',writers:['Benjamin Percy'],artists:['Juan Ferreyra','Otto Schmidt'],summary:'The Ninth Circle’s endgame reshapes Seattle and pushes Oliver toward a national mission.',issues:range('Green Arrow',2016,18,25,2017),priority:'core',legacyIds:['rb-5-ww']}),
+  entry({id:'rb-green-arrow-hard-traveling',routeId:'green-arrow-family',phaseId:'rb-phase-5',title:'Green Arrow #26–31: Hard-Traveling Hero',year:'2017',writers:['Benjamin Percy'],artists:['Stephen Byrne','Jamál Campbell'],summary:'Oliver crosses the country seeking help from the Justice League while exposing the Ninth Circle’s reach.',issues:range('Green Arrow',2016,26,31,2017),priority:'important',legacyIds:['rb-5-ww']})
+];
+
+export const routeData = route({id:'green-arrow-family',title:'Green Arrow Family',shortTitle:'Green Arrow',icon:'➶',accent:'green',description:'Oliver Queen and Black Canary reunite in a political action run leading into Gotham Resistance.',blocks:[
+  routeBlock({id:'rb-ga-main',title:'The Ninth Circle Saga',year:'2016–2017',mode:'sequential',steps:['rb-green-arrow-death-life','rb-green-arrow-island-scars','rb-green-arrow-emerald-outlaw','rb-green-arrow-rise-star-city','rb-green-arrow-hard-traveling']}),
+  routeBlock({id:'rb-ga-metal',title:'Dark Nights: Metal',year:'2017–2018',mode:'strict',steps:['dark-nights-metal']})
+]});

@@ -14,15 +14,16 @@ globalThis.document={
   addEventListener(){}
 };
 globalThis.window=globalThis;
-globalThis.location={hash:'#/era/absolute'};
+globalThis.location={hash:'#/specials/collaborations'};
 globalThis.addEventListener=()=>{};
 globalThis.matchMedia=()=>({matches:false,addEventListener(){}});
 globalThis.localStorage={data:new Map(),getItem(k){return this.data.get(k)||null;},setItem(k,v){this.data.set(k,v);},removeItem(k){this.data.delete(k);}};
 globalThis.scrollTo=()=>{};
 globalThis.FileReader=class{};
 await import('../assets/js/app.js');
-await new Promise(resolve=>setTimeout(resolve,700));
+await new Promise(resolve=>setTimeout(resolve,250));
 const html=elements.get('main').innerHTML;
-if(!html.includes('Absolute Universe')) throw new Error('Structured Absolute Universe flow did not render');
-if(html.includes('That section could not be loaded')) throw new Error('Fatal render path shown');
-console.log('Smoke render passed:', html.length, 'characters');
+if(!html.includes('Elseworlds & Collaborations')) throw new Error('Special collection route did not render.');
+if(!html.includes('DC × Marvel')) throw new Error('Collaboration group did not render.');
+if(html.includes('That section could not be loaded')) throw new Error('Fatal render path shown.');
+console.log('Special collections smoke render passed:', html.length, 'characters');

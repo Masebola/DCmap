@@ -7,7 +7,7 @@ import { entries as lanternEntries, routeData as lanternRoute } from './routes/g
 import { entries as darkEntries, routeData as darkRoute } from './routes/dark-occult.js';
 import { entries as soloEntries, routeData as soloRoute } from './routes/solo-heroes.js';
 import { entries as extraEntries, routeData as extraRoute } from './routes/extra-worlds.js';
-import { special } from './helpers.js';
+import { DC_UNIVERSE_REBIRTH_1 } from '../../shared/bridge-issues.js';
 
 const entries = [
   ...universeEntries,
@@ -20,7 +20,7 @@ const entries = [
 ];
 
 const routes = [universeRoute, batRoute, supermanRoute, lanternRoute, darkRoute, soloRoute, extraRoute];
-const finaleIssue = special('DC Universe: Rebirth', 2016);
+const finaleIssue = DC_UNIVERSE_REBIRTH_1;
 
 export default {
   format:'structured',

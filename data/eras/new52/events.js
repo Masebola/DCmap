@@ -178,7 +178,7 @@ export const NEW52_EVENTS = [
     ],
     requiredBefore: ['Aquaman through #13 and #0', 'Justice League through #14'],
     next: 'Aquaman continues into Death of a King; Justice League moves toward Trinity War.',
-    routeIds: ['universe-spine', 'aquaman'],
+    routeIds: ['universe-spine'],
     legacyIds: ['n52-3-sc1-part-1', 'n52-3-sc1-part-2']
   }),
   event({
@@ -295,7 +295,7 @@ export const NEW52_EVENTS = [
     ],
     requiredBefore: ['The Flash through #25'],
     next: 'Finish the recommended Flash run with #26–29 and Annual #2.',
-    routeIds: ['flash']
+    routeIds: ['solo-heroes']
   }),
   event({
     id: 'lights-out',
