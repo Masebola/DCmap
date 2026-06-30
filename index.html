@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A curated, event-anchored DC Comics reading tracker from Crisis on Infinite Earths through DC All In.">
+  <meta name="description" content="A curated DC Comics reading tracker covering main continuity, Elseworlds, Black Label and cross-publisher collaborations.">
   <title>DC Reading Tracker</title>
   <script>
     (() => {
@@ -44,10 +44,14 @@
     </div>
     <nav class="desktop-nav" aria-label="Primary navigation">
       <a href="#/dashboard" data-nav-view="dashboard">Dashboard</a>
-      <a href="#/era/new52" data-nav-view="flow">Master Flow</a>
-      <a href="#/route/new52" data-nav-view="route">Routes</a>
-      <a href="#/event/new52" data-nav-view="event">Events</a>
+      <a href="#/era/new52" data-nav-view="flow" data-era-nav="flow">Master Flow</a>
+      <a href="#/route/new52" data-nav-view="route" data-era-nav="route">Routes</a>
+      <a href="#/event/new52" data-nav-view="event" data-era-nav="event">Events</a>
       <a href="#/essentials" data-nav-view="essentials">Essentials</a>
+      <a href="#/great-stories" data-nav-view="great-stories">Great Stories</a>
+      <a href="#/specials/elseworlds" data-nav-view="specials">Elseworlds & Collaborations</a>
+      <a href="#/stats" data-nav-view="stats">Stats</a>
+      <a href="#/outside" data-nav-view="outside">Outside Roadmap</a>
       <a href="#/settings" data-nav-view="settings">Settings</a>
     </nav>
   </header>
@@ -56,10 +60,10 @@
 
   <nav class="mobile-nav" aria-label="Mobile navigation">
     <a href="#/dashboard" data-nav-view="dashboard"><span>⌂</span>Home</a>
-    <a href="#/era/new52" data-nav-view="flow"><span>☷</span>Flow</a>
-    <a href="#/route/new52" data-nav-view="route"><span>⇢</span>Routes</a>
-    <a href="#/event/new52" data-nav-view="event"><span>◆</span>Events</a>
-    <a href="#/settings" data-nav-view="settings"><span>•••</span>More</a>
+    <a href="#/era/new52" data-nav-view="flow" data-era-nav="flow"><span>☷</span>Flow</a>
+    <a href="#/route/new52" data-nav-view="route" data-era-nav="route"><span>⇢</span>Routes</a>
+    <a href="#/event/new52" data-nav-view="event" data-era-nav="event"><span>◆</span>Events</a>
+    <a href="#/specials/elseworlds" data-nav-view="specials"><span>✦</span>Elseworlds</a>
   </nav>
 
   <dialog id="details-dialog" class="details-dialog">

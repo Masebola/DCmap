@@ -1,65 +1,128 @@
-# DC Reading Tracker
+# DC Reading Tracker v7.1
 
-A modular, event-anchored DC Comics reading tracker. The current redesign preserves the existing era roadmaps while rebuilding the New 52 as exact issue-level data with routes, phases and ordered crossover gates.
+A static HTML, CSS and vanilla JavaScript reading tracker for the DC Universe. It uses one HTML application shell, modular era data, hash routing, canonical issue records and browser localStorage.
 
-## Current features
+## Roadmap coverage
 
-- One shared HTML application shell
-- Lazy-loaded era modules
-- Structured New 52 master flow
-- Separate family routes and event library
-- Exact ordered event checklists
-- Canonical issue progress, so shared issues are counted once
-- Legacy compatibility for older era roadmaps
-- Progress import and export
+### Structured modern eras
+
+- New 52, 2011–2016
+- Rebirth to Dark Nights: Metal, 2016–2018
+- Post-Metal to Infinite Frontier, 2018–2021
+- Infinite Frontier to Dark Crisis, 2021–2023
+- Dawn of DC to DC All In Special, 2023–2024
+- DC All In, 2024–June 2026
+- Absolute Universe, 2024–June 2026
+
+### Legacy-compatible eras
+
+- Crisis to Zero Hour
+- Zero Hour to Infinite Crisis
+- 52 to Final Crisis
+- Post-Final Crisis to Blackest Night
+- Post-Blackest Night to Flashpoint
+
+## Elseworlds & Collaborations
+
+v7.1 adds a separate top-level library that does not change the main-continuity percentage.
+
+### Elseworlds / Black Label
+
+- Classic Elseworlds
+- Major alternate universes
+- The modern revived Elseworlds line
+- Superhero-focused DC Black Label projects
+- 65 tracked works and 322 unique issues or graphic novels
+
+### Collaborations
+
+- Historical and current DC × Marvel crossovers
+- Digital DC/Marvel one-shots
+- Crossovers with Dark Horse, IDW, BOOM! Studios, Archie, Dynamite, SEGA, Legendary and other partners
+- 70 tracked works and 277 unique issues or graphic novels
+
+Both shelves support:
+
+- Reading List, All and Completed views
+- Group and publishing-partner filters
+- Live search
+- Inline issue checklists
+- Mark Read and Mark Unread
+- Auto-hide completed works
+- Completed Library integration
+- Separate Stats totals
+
+The current special-shelf catalog was checked through June 30, 2026.
+
+## v7.1 fixes and safeguards
+
+- Fixed the Outside the Roadmap filters, which previously rendered but did not respond
+- Added search-field focus and cursor restoration during live filtering
+- Corrected completion messaging for special shelves
+- Added strict runtime rejection of invalid structured-era data instead of only logging warnings
+- Added automated coverage checking so every rendered button action must have an application handler
+- Added a dedicated smoke test for the Collaborations route
+- Confirmed that special-shelf issue IDs do not collide with main-continuity issue IDs
+- Preserved existing scroll anchors, progress migration and localStorage compatibility
+
+## Existing reading tools retained
+
+- Parallel, sequential and strict crossover reading modes
+- Inline issue checklists
+- Exact event reading orders
+- Writer and optional artist information
+- Optional-reading filters
+- Active lane Select All and Clear All controls
+- Reading List, All and Completed route views
+- Auto-hide completed arcs with Undo
+- Completed Library
+- Outside the Roadmap shelf
+- Great Stories and Stats
 - Light, dark and system themes
-- Responsive laptop and phone layouts
-- Data validation for duplicate IDs and missing references
+- Import and export
+- Scroll and keyboard-focus preservation after marking progress
+- Responsive desktop and mobile layouts
 
 ## Run locally
 
-ES modules need a local web server. From the project folder, run:
+ES modules require a local web server. From this folder run:
 
 ```bash
 npm run serve
 ```
 
-Then open `http://localhost:8000`.
+Then open:
 
-VS Code Live Server also works.
-
-## Validate the data
-
-```bash
-npm run validate
-node tests/render-views.mjs
-node tests/smoke-app.mjs
+```text
+http://localhost:8000
 ```
 
-## Deploy to GitHub Pages
+VS Code Live Server, GitHub Pages or another static web server also work.
 
-1. Push the project to a GitHub repository.
-2. Open **Settings → Pages**.
-3. Choose **Deploy from a branch**.
-4. Select the main branch and the repository root.
+## Tests
 
-The application uses hash routes, so no special server redirects are required.
+```bash
+npm test
+```
 
-## Project status
+The suite validates every structured era, Great Stories references, cross-era bridge issues, global progress accounting, the Elseworlds and Collaborations catalogs, generated views, route controls, action coverage, visibility filters, migration and scroll-preservation behaviour.
 
-- **New 52:** rebuilt in the structured format
-- **Other eras:** preserved through the compatibility renderer
-- **Next stages:** refine New 52 content and interactions, then convert later eras one at a time
+## Progress compatibility
 
-The previous working tracker is preserved inside `/legacy`.
+Progress remains stored under the existing `dcrt-v6-state` localStorage key, so replacing v6.2, v6.3 or v7.0 does not erase browser progress. v7 accepts both version 6 and version 7 export files, then saves them in the v7 format.
 
-## Version 6.2: scroll-preserving progress updates
+Use **Settings → Export progress** before replacing a deployed copy or moving to another browser.
 
-Progress changes no longer send a route back to the top. The application now:
+## Important folders
 
-- scrolls to the top only when navigating to a genuinely different page;
-- captures the active entry or event before a progress update;
-- restores that item to the same viewport position after the interface refreshes;
-- restores keyboard focus without causing another scroll;
-- preserves position for single issues, full ranges, events and legacy-era progress;
-- keeps inline issue and event expansion anchored while opening or closing.
+```text
+assets/js/                    application engine, state, routing and progress
+components/                   dashboard, roadmap, special shelves and statistics views
+data/eras/                    modular continuity-era data
+data/shared/                  issue helpers, route definitions and bridge issues
+data/great-stories.js         curated story references
+data/outside-roadmap.js       excluded and summary-only material
+data/special-collections.js   Elseworlds, Black Label and collaborations catalog
+tests/                        validation and regression suite
+legacy/                       preserved original tracker
+```
