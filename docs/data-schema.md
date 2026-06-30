@@ -1,45 +1,58 @@
-# Data Schema
+# Structured era schema
 
-## Canonical issue
+A structured era exports:
 
-Each issue has one stable ID and can be referenced by any number of routes and events.
+- `id`, `label`, `title`, `subtitle`, `dates`, `description`
+- `phases`
+- `routes`
+- `entries`
+- `events`
+- optional `finaleIssue` or `openingIssue`
 
-```js
-{
-  id: "justice-league-2011-022",
-  series: "Justice League",
-  volumeYear: 2011,
-  issue: "22",
-  releaseYear: 2013
-}
-```
-
-## Reading entry
-
-A reading entry is a story block inside one route and phase.
+## Entry
 
 ```js
-{
-  id: "jl-origin",
-  routeId: "universe-spine",
-  phaseId: "n52-phase-1",
-  title: "Justice League: Origin",
-  year: "2011–2012",
-  issues: [],
-  priority: "essential"
-}
+entry({
+  id,
+  routeId,
+  phaseId,
+  title,
+  year,
+  summary,
+  issues,
+  priority: 'core' | 'important' | 'recommended' | 'great-story' | 'optional',
+  writers: [],
+  artists: [],
+  legacyIds: [],
+  tags: [],
+  note,
+  stop
+})
 ```
+
+Optional entries remain inside their correct route but do not count toward main-route completion.
 
 ## Event
 
-An event stores an exact ordered chapter list and its prerequisites.
-
 ```js
-{
-  id: "trinity-war",
-  type: "hard-gate",
-  chapters: [],
+event({
+  id,
+  title,
+  year,
+  type,
+  phaseId,
+  summary,
+  chapters,
+  requiredEntries: [],
   requiredBefore: [],
-  next: "Continue directly to Forever Evil."
-}
+  routeIds: [],
+  architect,
+  next
+})
 ```
+
+`requiredEntries` creates live prerequisite checks. `requiredBefore` remains available for explanatory text.
+
+## Canonical issues
+
+Every issue has one deterministic ID. The same issue can appear in a route, event and adjacent era without creating duplicate progress.
