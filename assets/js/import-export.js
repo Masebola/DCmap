@@ -2,7 +2,7 @@ import { store } from './state.js';
 import { toast } from './utils.js';
 
 export function exportProgress() {
-  const payload = { ...store.value, version: 6, exportedAt: new Date().toISOString() };
+  const payload = { ...store.value, version: 7, exportedAt: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -18,11 +18,11 @@ export function importProgress(file) {
   reader.onload = () => {
     try {
       const parsed = JSON.parse(reader.result);
-      if (parsed.version === 6) {
+      if ([6, 7].includes(parsed.version)) {
         store.replace(parsed);
       } else {
         store.replace({
-          version: 6,
+          version: 7,
           issueProgress: parsed.issueProgress || {},
           legacyProgress: parsed.roadProgress || {},
           essentials: parsed.essentials || [],

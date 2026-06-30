@@ -39,31 +39,73 @@ export const store = {
     data.preferences.theme = theme;
     notify();
   },
+  setRouteView(value) {
+    data.preferences.routeView = ['reading', 'all', 'completed'].includes(value) ? value : 'reading';
+    notify();
+  },
+  setIncludeOptional(value) {
+    data.preferences.includeOptional = Boolean(value);
+    notify();
+  },
+  setAutoHideCompleted(value) {
+    data.preferences.autoHideCompleted = Boolean(value);
+    notify();
+  },
+  setActiveLanes(eraId, routeIds) {
+    data.preferences.activeLanes[eraId] = [...new Set(routeIds)];
+    notify();
+  },
   replace(next) {
+    const currentPreferences = {
+      theme: 'system',
+      readingMode: 'curated',
+      routeView: 'reading',
+      includeOptional: true,
+      autoHideCompleted: true,
+      activeLanes: {}
+    };
     Object.keys(data).forEach(key => delete data[key]);
-    Object.assign(data, next);
+    Object.assign(data, {
+      version: 7,
+      issueProgress: { ...(next.issueProgress || {}) },
+      legacyProgress: { ...(next.legacyProgress || next.roadProgress || {}) },
+      essentials: [...(next.essentials || [])],
+      preferences: { ...currentPreferences, ...(next.preferences || {}), activeLanes: { ...(next.preferences?.activeLanes || {}) } },
+      migrations: { ...(next.migrations || {}) },
+      recent: [...(next.recent || [])]
+    });
     notify();
   },
   markMigration(key) { data.migrations[key] = true; notify(); }
 };
 
-export function migrateNew52Aliases(model) {
+function applyLegacyGroups(model) {
+  const groups = new Map();
+  const add = (legacyIds, issueList) => {
+    for (const legacyId of legacyIds || []) {
+      if (!groups.has(legacyId)) groups.set(legacyId, []);
+      const list = groups.get(legacyId);
+      for (const issue of issueList || []) if (!list.some(item => item.id === issue.id)) list.push(issue);
+    }
+  };
+  model.entries.forEach(entry => add(entry.legacyIds, entry.issues));
+  model.events.forEach(event => add(event.legacyIds, event.chapters));
+  for (const [legacyId, issueList] of groups) {
+    const count = Number(data.legacyProgress?.[legacyId] || 0);
+    if (!count) continue;
+    issueList.slice(0, Math.min(count, issueList.length)).forEach(issue => { data.issueProgress[issue.id] = true; });
+  }
+}
+
+export function migrateStructuredAliases(model) {
   let changed = false;
-  if (!data.migrations?.new52CanonicalV1) {
-    const apply = (legacyIds, issueList) => {
-      if (!legacyIds?.length || !issueList?.length) return;
-      for (const legacyId of legacyIds) {
-        const count = Number(data.legacyProgress?.[legacyId] || 0);
-        if (!count) continue;
-        issueList.slice(0, Math.min(count, issueList.length)).forEach(issue => { data.issueProgress[issue.id] = true; });
-      }
-    };
-    model.entries.forEach(entry => apply(entry.legacyIds, entry.issues));
-    model.events.forEach(event => apply(event.legacyIds, event.chapters));
-    data.migrations.new52CanonicalV1 = true;
+  const migrationKey = `${model.id}CanonicalV1`;
+  if (!data.migrations?.[migrationKey]) {
+    applyLegacyGroups(model);
+    data.migrations[migrationKey] = true;
     changed = true;
   }
-  if (!data.migrations?.new52RouteRowsV2) {
+  if (model.id === 'new52' && !data.migrations?.new52RouteRowsV2) {
     [7,8,9,10,11,14,15,16,18,19,20].forEach(number => {
       const source = `justice-league-2011-${number}`;
       const backup = `justice-league-shazam-backup-2011-${number}`;

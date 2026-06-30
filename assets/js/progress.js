@@ -1,4 +1,4 @@
-import { ERA_TOTALS, LEGACY_ITEM_TOTALS, NEW52_ISSUE_IDS } from '../../data/progress-manifest.js';
+import { ERA_TOTALS, LEGACY_ITEM_TOTALS, STRUCTURED_ERA_IDS, STRUCTURED_LEGACY_IDS, STRUCTURED_MAIN_ISSUE_IDS } from '../../data/progress-manifest.js';
 import { percent, unique } from './utils.js';
 import { store } from './state.js';
 
@@ -22,17 +22,23 @@ export function legacyEraStats(era) {
   return { read, total, pct: percent(read, total), groups: values.filter(value => value.complete).length, groupTotal: values.length };
 }
 
-export function structuredEraStats(model) {
-  return issueStats([...model.issues.values()]);
+export function structuredEraStats(model, scope = 'main') {
+  const source = scope === 'optional' ? model.optionalIssues : scope === 'all' ? model.issues : model.mainIssues;
+  return issueStats([...source.values()]);
 }
 
 export function globalStats() {
+  const migratedIds = new Set(STRUCTURED_LEGACY_IDS);
   const legacyRead = Object.entries(store.value.legacyProgress || {}).reduce((sum, [id, value]) => {
+    if (migratedIds.has(id)) return sum;
     const total = LEGACY_ITEM_TOTALS[id];
     return total ? sum + Math.min(total, Math.max(0, Number(value) || 0)) : sum;
   }, 0);
-  const new52Read = NEW52_ISSUE_IDS.filter(id => store.value.issueProgress[id]).length;
-  const total = Object.values(ERA_TOTALS).reduce((sum, value) => sum + value, 0);
-  const read = legacyRead + new52Read;
+  const structuredRead = STRUCTURED_MAIN_ISSUE_IDS.filter(id => store.value.issueProgress[id]).length;
+  const legacyTotal = Object.entries(ERA_TOTALS)
+    .filter(([id]) => !STRUCTURED_ERA_IDS.includes(id))
+    .reduce((sum, [, value]) => sum + value, 0);
+  const total = legacyTotal + STRUCTURED_MAIN_ISSUE_IDS.length;
+  const read = legacyRead + structuredRead;
   return { read, total, pct: percent(read, total) };
 }
